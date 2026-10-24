@@ -17,7 +17,7 @@ module tt_um_switcherCpu (
 );
 
 
-  GP_REG register(
+  GP_REG r0(
     .clk(clk),
     .rst(~rst_n),
     .a(uio_out),
@@ -71,4 +71,4 @@ always @(negedge clk) begin
 end
 
 
-endmodule;
+endmodule
