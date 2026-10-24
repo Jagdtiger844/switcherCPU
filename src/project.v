@@ -20,10 +20,10 @@ module tt_um_switcherCpu (
   GP_REG r0(
     .clk(clk),
     .rst(~rst_n),
-    .a(uio_out),
-    .b(uio_out),
-    .c(uio_out),
-    .d(uio_out),
+    .a(uio_in),
+    .b(uio_in),
+    .c(uio_in),
+    .d(uio_in),
     .ien(ui_in[0]),
     .isel(ui_in[2:1]),
 
@@ -33,11 +33,11 @@ module tt_um_switcherCpu (
   // All output pins must be assigned. If not used, assign to 0.
   // assign uo_out  = ui_in ^ uio_in;  // Example: ou_out is the sum of ui_in and uio_in
   //assign uio_out = 0;
-  assign uio_oe  = 1;
+  assign uio_oe = ui_in[3];
   assign uo_out = uio_out;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, uio_in, ui_in[7:3],1'b0};
+  wire _unused = &{ena, ui_in[7:4], 1'b0};
 
 endmodule
 
