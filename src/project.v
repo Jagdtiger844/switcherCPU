@@ -34,9 +34,10 @@ module tt_um_switcherCpu (
   // assign uo_out  = ui_in ^ uio_in;  // Example: ou_out is the sum of ui_in and uio_in
   //assign uio_out = 0;
   assign uio_oe  = 1;
+  assign uo_out = uio_out;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, 1'b0};
+  wire _unused = &{ena, uio_in, ui_in[7:3],1'b0};
 
 endmodule
 
