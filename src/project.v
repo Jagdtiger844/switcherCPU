@@ -17,7 +17,7 @@ module tt_um_switcherCpu (
 );
 
 
-  GP_REG reg(
+  GP_REG register(
     .clk(clk),
     .rst(~rst_n),
     .a(uio_out),
