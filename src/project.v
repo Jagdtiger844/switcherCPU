@@ -16,7 +16,6 @@ module tt_um_switcherCpu (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-
   GP_REG r0(
     .clk(clk),
     .rst(~rst_n),
@@ -56,20 +55,62 @@ module GP_REG #(parameter W=8) (
   output reg [W-1:0]q
 );
 
+wire [3:0]enables;
+wire [W-1:0]dIn;
+
+Encoder2to4 enc(
+  .a(isel),
+  .y(enables)
+);
+
+Mux4to1 mux1(
+  .a(a),
+  .b(b),
+  .c(c),
+  .d(d),
+  .isel(enables),
+
+  .y(dIn)
+);
 
 always @(negedge clk) begin
   if (rst) begin
     q <= 0;
   end else if (ien) begin
-    case (isel)
-      0: q <= a;
-      1: q <= b;
-      2: q <= c;
-      3: q <= d;
-      default: q <= q;
-    endcase
+    q <= dIn;
+  end else begin
+    q <= q;
   end
 end
 
+endmodule
+
+module Encoder2to4 (
+  input wire [1:0]a,
+  output wire [3:0]y
+);
+
+assign y[0] = ~a[0] & ~a[1];
+assign y[1] =  a[0] & ~a[1];
+assign y[2] = ~a[0] &  a[1];
+assign y[3] =  a[0] &  a[1];
+
+endmodule
+
+module Mux4to1 #(parameter W=8) (
+  input wire [W-1:0]a,
+  input wire [W-1:0]b,
+  input wire [W-1:0]c,
+  input wire [W-1:0]d,
+  input wire [3:0]isel,
+
+  output wire [W-1:0]y
+);
+
+genvar i;
+generate for (i = 0; i < W; i = i + 1) begin
+  assign y[i] = (((a[i] & isel[0]) | (b[i] & isel[1])) | ((c[i] & isel[2]) | (d[i] & isel[3])));
+end
+endgenerate
 
 endmodule
